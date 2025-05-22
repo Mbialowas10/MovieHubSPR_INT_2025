@@ -40,6 +40,12 @@ android {
 }
 
 dependencies {
+    //coil compose
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
+    implementation(libs.moshi.kotlin)
+    implementation(libs.converter.moshi)
     implementation("androidx.navigation:navigation-compose:2.8.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

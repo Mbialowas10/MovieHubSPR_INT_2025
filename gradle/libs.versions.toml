@@ -9,8 +9,12 @@ lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 
-navigationCompose = "2.8.1"
-navigationComposeVersion = "2.8.6"
+moshiKotlin = "1.9.3"
+converterMoshi = "2.9.0"
+
+coilCompose = "3.1.0"
+
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -27,8 +31,10 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-#androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-#navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationComposeVersion" }
+moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlin" }
+converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "converterMoshi" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -5,15 +5,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.mbialowas.moviehubspr_int_2025.BuildConfig
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.api.model.MovieData
 import retrofit2.Call
 import retrofit2.Response
 
+
 class MovieManager{
 
     private var _moviesResponse = mutableStateOf<List<Movie>>(emptyList())
-    val api_key="705c90d7c1dc4b818dbfacd3697a647f"
+    val api_key = BuildConfig.TMDB_API_KEY
 
 
     val moviesResponse: MutableState<List<Movie>>
@@ -26,7 +28,7 @@ class MovieManager{
 
     private fun getMovies() {
         val service = Api.retrofitService.getTrendingMovies(api_key)
-
+        Log.i("API", api_key)
         service.enqueue(object : retrofit2.Callback<MovieData>{
             override fun onResponse(
                 call: Call<MovieData?>,

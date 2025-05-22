@@ -4,17 +4,19 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+
 android {
     namespace = "com.mbialowas.moviehubspr_int_2025"
     compileSdk = 35
 
     defaultConfig {
+
+
         applicationId = "com.mbialowas.moviehubspr_int_2025"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

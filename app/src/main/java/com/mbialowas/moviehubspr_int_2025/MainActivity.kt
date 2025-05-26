@@ -78,7 +78,10 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
             startDestination = Destination.Movie.route
         ){
             composable(Destination.Movie.route){
-                MovieScreen(navController = navController, movieManager= movieManager, modifier = modifier)
+                MovieScreen(
+                    navController = navController, movieManager = movieManager, modifier = modifier,
+                    db = db
+                )
             }
             composable(Destination.Search.route){
                 SearchScreen()

@@ -1,5 +1,6 @@
 package com.mbialowas.moviehubspr_int_2025.api.db
 
+import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -8,6 +9,7 @@ import androidx.room.Update
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import retrofit2.http.GET
 
+@Dao
 interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

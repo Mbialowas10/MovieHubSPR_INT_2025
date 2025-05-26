@@ -6,13 +6,18 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.mbialowas.moviehubspr_int_2025.BuildConfig
+import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.api.model.MovieData
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 
 
-class MovieManager{
+class MovieManager(
+    database: AppDatabase
+){
 
     private var _moviesResponse = mutableStateOf<List<Movie>>(emptyList())
     val api_key = BuildConfig.TMDB_API_KEY
@@ -23,10 +28,10 @@ class MovieManager{
             _moviesResponse
         }
     init{
-        getMovies()
+        getMovies(database)
     }
 
-    private fun getMovies() {
+    private fun getMovies(database: AppDatabase) {
         val service = Api.retrofitService.getTrendingMovies(api_key)
         Log.i("API", api_key)
         service.enqueue(object : retrofit2.Callback<MovieData>{
@@ -39,7 +44,18 @@ class MovieManager{
 
                     _moviesResponse.value = response.body()?.results ?: emptyList() // fetch trending movies from tmdb
                     Log.i("DataStream", _moviesResponse.value.toString())
+
+                    GlobalScope.launch {
+                        saveDataToDatabase(database= database, _moviesResponse.value)
+                    }
                 }
+            }
+
+            private suspend fun saveDataToDatabase(
+                database: AppDatabase,
+                movies: List<Movie>
+            ) {
+                    database.movieDao().insertAllMovies(movies)
             }
 
             override fun onFailure(

@@ -1,10 +1,14 @@
 package com.mbialowas.moviehubspr_int_2025.api.model
 
 
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
+@Entity(tableName = "movies")
 data class Movie(
     @Json(name = "adult")
     var adult: Boolean?,
@@ -12,6 +16,7 @@ data class Movie(
     var backdropPath: String?,
     @Json(name = "genre_ids")
     var genreIds: List<Int?>?,
+    @PrimaryKey(autoGenerate = false)
     @Json(name = "id")
     var id: Int?,
     @Json(name = "media_type")

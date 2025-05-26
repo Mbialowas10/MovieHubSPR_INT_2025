@@ -31,7 +31,11 @@ import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 
 
 @Composable
-fun MovieScreen(modifier: Modifier = Modifier, movieManager: MovieManager, navController: NavController){
+fun MovieScreen(
+    modifier: Modifier,
+    movieManager: MovieManager,
+    navController: NavController
+){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -62,15 +66,16 @@ fun MovieCard(
     Column(
         modifier = Modifier
             .border(1.dp, Color.Red, shape= RoundedCornerShape(10.dp))
+            .fillMaxSize()
             .padding(5.dp)
             .clickable{
-               //navController.navigate()
+               navController.navigate("movieDetail/${movieItem.id}")
             }
     ){
         Row(
             modifier = Modifier
                 .background(Color.DarkGray)
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(5.dp)
         ){
             AsyncImage(

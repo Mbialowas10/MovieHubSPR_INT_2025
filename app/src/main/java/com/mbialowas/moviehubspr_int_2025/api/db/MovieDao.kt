@@ -1,0 +1,24 @@
+package com.mbialowas.moviehubspr_int_2025.api.db
+
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import com.mbialowas.moviehubspr_int_2025.api.model.Movie
+import retrofit2.http.GET
+
+interface MovieDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAllMovies(movies: List<Movie>)
+    //INSERT INTO movies (SELECT * from api)
+    // INSERT INTO INTO (movies) VALUES("title","overview", "posterPAHT")
+
+    @Query("SELECT * FROM movies WHERE id = :id")
+    fun getMovieById(id:Int): Movie?
+
+
+
+
+}

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.devtoolsKsp) version "1.9.0-1.0.13"
 }
 
 
@@ -59,6 +60,14 @@ android {
 }
 
 dependencies {
+
+    // room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.common)
+    annotationProcessor(libs.androidx.room.room.compiler)
+    ksp(libs.androidx.room.room.compiler)
+
     //coil compose
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)

@@ -36,12 +36,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.mbialowas.moviehubspr_int_2025.api.MovieManager
+import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
+import com.mbialowas.moviehubspr_int_2025.destinations.Destination
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
 @Composable
-fun MovieDetailScreen(modifier: Modifier, movie: Movie){
+fun MovieDetailScreen(
+    modifier: Modifier, movie: Movie,
+    db: AppDatabase,
+    navController: NavController,
+    movieManager: MovieManager
+){
     Box(
         modifier
             .background(Color.Black)
@@ -53,6 +66,8 @@ fun MovieDetailScreen(modifier: Modifier, movie: Movie){
 
         // state level variable to track movie favourite state
         var isIconChanged by remember { mutableStateOf(false) }
+        var showEditDialog by remember { mutableStateOf(false) }
+        var showDeleteDialog by  remember { mutableStateOf(false) }
 
         Column{
             Text(
@@ -103,14 +118,62 @@ fun MovieDetailScreen(modifier: Modifier, movie: Movie){
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ){
                     Button(
-                        onClick = {}
+                        onClick = {
+                            showEditDialog = true
+                        }
                     ) {
                         Text("Edit")
                     }
                     Button(
-                        onClick = {}
+                        onClick = {
+                            showDeleteDialog =true
+                        }
                     ) {
                         Text("Delete")
+                    }
+                    // show Dialogs
+                    if (showDeleteDialog){
+                        DeleteMovieDialog(
+                            movie = movie,
+                            onDismiss = {showDeleteDialog = false},
+                            onConfirmDelete = {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    // call our Movie dao
+                                    db.movieDao().delete(movie)
+                                    Log.i("MJB", "Past delete BP!")
+
+                                    //navController.navigate(Destination.Movie.route)
+                                    // navigation must take place on mainThread not a background
+                                    // running thread aka coroutine.
+                                    // refresh the movie screen
+                                    movieManager.refreshMovies()
+
+                                }
+                                showDeleteDialog = false
+                                navController.navigate(Destination.Movie.route)
+                            }
+                        )
+                    } // end DeleteDialog
+                    if (showEditDialog){
+                        EditMovieDialog(
+                            movie = movie,
+                            onDismiss = { showEditDialog = false },
+                            onConfirmEdit =  {newTitle, newDescription ->
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    movie.id?.let{movie->
+                                        // update movie in database
+                                        db.movieDao().updateMovie(movie,newTitle,newDescription)
+                                        Log.i("MJB", "Past edit BP!")
+                                        movieManager.refreshMovies()
+                                    }
+                                }
+                                showEditDialog = false
+                                navController.navigate(Destination.Movie.route)
+
+                            }
+
+
+                        )
                     }
                 } // end of Edit/Delete row
 

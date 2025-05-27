@@ -21,6 +21,7 @@ class MovieManager(
 
     private var _moviesResponse = mutableStateOf<List<Movie>>(emptyList())
     val api_key = BuildConfig.TMDB_API_KEY
+    private val database = database
 
 
     val moviesResponse: MutableState<List<Movie>>
@@ -66,6 +67,11 @@ class MovieManager(
             }
 
         })
+    }
+
+    suspend fun refreshMovies(){
+        var movies = database.movieDao().getAllMovies()
+        _moviesResponse.value = movies
     }
 
 

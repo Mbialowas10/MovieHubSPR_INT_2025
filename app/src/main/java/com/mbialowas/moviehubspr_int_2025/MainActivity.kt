@@ -98,7 +98,8 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
                     }
                 }
                 movie?.let{
-                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!)
+                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager)
+
                 }
                 //MovieDetailScreen(modifier=modifier, movie_id)
 

@@ -3,16 +3,20 @@ package com.mbialowas.moviehubspr_int_2025.mvvm
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mbialowas.moviehubspr_int_2025.BuildConfig
 import com.mbialowas.moviehubspr_int_2025.api.Api
 import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.api.model.MovieData
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MovieViewModel : ViewModel() {
 
@@ -22,6 +26,10 @@ class MovieViewModel : ViewModel() {
     val searchTerm = mutableStateOf("")
     // movies list
     val movies = mutableStateOf<List<Movie>>(emptyList())
+
+    // variable to keep track of the Movie Icon state
+    private val _movieIconState = MutableStateFlow<Map<Int,Boolean>>(emptyMap())
+    val movieIconState = _movieIconState.asStateFlow()
 
     fun searchMovies(movieName:String, database: AppDatabase){
 
@@ -47,11 +55,33 @@ class MovieViewModel : ViewModel() {
             }
 
         })
+    }
+    /**
+     * Purpose - a function to update the movie favorite state ie. true or false
+     * @params movieId: Int - represent the movieId
+     * @params database: AppDatabase - represent the database
+     * @return unit
+     */
+    fun updateMovieIconState(movieId: Int, database: AppDatabase) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val movie = database.movieDao().getMovieById(movieId)
 
+            if ( movie != null ){
+                movie.isFavorite = !movie.isFavorite
 
+                // update movie in the database
+                launch(Dispatchers.IO){
+                    database.movieDao().updateMovieState(movie)
 
+                    _movieIconState.value = _movieIconState.value.toMutableMap().apply{
+                        this[movieId] = movie.isFavorite
+                    }
+                }
 
+            }else {
+                Log.e("MovieViewModel", "Movie with ID $movieId not found in database")
+            }
+        }
 
     }
-
 }

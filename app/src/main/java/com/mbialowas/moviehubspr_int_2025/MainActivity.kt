@@ -109,7 +109,7 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
                     }
                 }
                 movie?.let{
-                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager)
+                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager, viewModel=viewModel)
 
                 }
                 //MovieDetailScreen(modifier=modifier, movie_id)

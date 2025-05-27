@@ -22,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -43,6 +45,7 @@ import com.mbialowas.moviehubspr_int_2025.api.MovieManager
 import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.destinations.Destination
+import com.mbialowas.moviehubspr_int_2025.mvvm.MovieViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +56,8 @@ fun MovieDetailScreen(
     modifier: Modifier, movie: Movie,
     db: AppDatabase,
     navController: NavController,
-    movieManager: MovieManager
+    movieManager: MovieManager,
+    viewModel: MovieViewModel
 ){
     Box(
         modifier
@@ -65,7 +69,8 @@ fun MovieDetailScreen(
         Log.i("MovieDetailScreen","${movie.posterPath}")
 
         // state level variable to track movie favourite state
-        var isIconChanged by remember { mutableStateOf(false) }
+        val iconState by viewModel.movieIconState.collectAsState() // observe state/data from viewmodel
+        var isIconChanged = iconState[movie.id] ?: false // get the latest state/date for given movie
         var showEditDialog by remember { mutableStateOf(false) }
         var showDeleteDialog by  remember { mutableStateOf(false) }
 
@@ -98,7 +103,10 @@ fun MovieDetailScreen(
                     contentScale = ContentScale.FillBounds
                 )
                 IconButton(
-                    onClick = { isIconChanged = !isIconChanged},
+                    onClick = {
+                        isIconChanged = !isIconChanged
+                        viewModel.updateMovieIconState(movie.id!!,db)
+                              },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)

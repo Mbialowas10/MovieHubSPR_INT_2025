@@ -28,6 +28,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.mbialowas.moviehubspr_int_2025.api.MovieManager
+import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 
 
@@ -36,7 +37,7 @@ fun MovieScreen(
     navController: NavController,
     modifier: Modifier,
     movieManager: MovieManager,
-    //db:AppDatabase
+    db:AppDatabase
 ) {
     Box(
         modifier = modifier
@@ -53,7 +54,7 @@ fun MovieScreen(
         val movies = movieManager.moviesResponse.value
         LazyColumn {
             items(movies) { movie ->
-                MovieCard(movieItem = movie, navController = navController, movieManager)
+                MovieCard(movieItem = movie, navController = navController, db=db,movieManager=movieManager)
                 Log.i("HTTP:", "https://image.tmdb.org/t/p/w500${movie.posterPath}")
             }
         }
@@ -64,8 +65,8 @@ fun MovieScreen(
 fun MovieCard(
     movieItem: Movie,
     navController: NavController,
-    //db: AppDatabase,
-    moviesManager: MovieManager
+    db: AppDatabase,
+    movieManager: MovieManager
 ) {
 
     Column(

@@ -23,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,6 +34,7 @@ import com.mbialowas.moviehubspr_int_2025.api.MovieManager
 import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.destinations.Destination
+import com.mbialowas.moviehubspr_int_2025.mvvm.MovieViewModel
 import com.mbialowas.moviehubspr_int_2025.screens.MovieDetailScreen
 import com.mbialowas.moviehubspr_int_2025.screens.MovieScreen
 import com.mbialowas.moviehubspr_int_2025.screens.SearchScreen
@@ -51,7 +54,9 @@ class MainActivity : ComponentActivity() {
                     // get db instance
                     val db = AppDatabase.getInstance(applicationContext)
                     val movieManager = MovieManager(db) // start the process to fetching api data
-                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db)
+                    // initialize viewModel
+                    val viewModel: MovieViewModel = ViewModelProvider(this)[MovieViewModel::class.java]
+                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db,viewModel)
                 }
             }
         }
@@ -60,7 +65,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase){
+fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase,viewModel: MovieViewModel){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -78,10 +83,16 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
             startDestination = Destination.Movie.route
         ){
             composable(Destination.Movie.route){
-                MovieScreen(navController = navController, movieManager= movieManager, modifier = modifier)
+                MovieScreen(navController = navController, movieManager= movieManager, modifier = modifier, db = db)
             }
             composable(Destination.Search.route){
-                SearchScreen()
+                SearchScreen(
+                    modifier = Modifier.padding(paddingValues),
+                    viewModel = viewModel,
+                    database = db,
+                    movieManager = movieManager,
+                    navController = navController
+                )
             }
             composable(Destination.Watch.route){
                 WatchScreen()

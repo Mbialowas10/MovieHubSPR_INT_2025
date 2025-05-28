@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
@@ -68,8 +69,8 @@ fun MovieDetailScreen(
         Log.i("MovieDetailScreen","${movie.posterPath}")
 
         // state level variable to track movie favourite state
-        val iconState by viewModel.movieIconState.collectAsState()
-        var isIconChanged = iconState[movie.id] == true
+        val iconState by viewModel.movieIconState.collectAsState() // observe state/data from viewmodel
+        var isIconChanged = iconState[movie.id] ?: false // get the latest state/date for given movie
         var showEditDialog by remember { mutableStateOf(false) }
         var showDeleteDialog by  remember { mutableStateOf(false) }
 
@@ -104,7 +105,6 @@ fun MovieDetailScreen(
                 IconButton(
                     onClick = {
                         isIconChanged = !isIconChanged
-                        // update movie state inside the view model
                         viewModel.updateMovieIconState(movie.id!!,db)
                               },
                     modifier = Modifier

@@ -24,6 +24,7 @@ import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -52,9 +53,9 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     // get db instance
                     val db = AppDatabase.getInstance(applicationContext)
-                    // initialize view model
-                    val viewModel = ViewModelProvider(this)[MovieViewModel::class.java]
                     val movieManager = MovieManager(db) // start the process to fetching api data
+                    // initialize viewModel
+                    val viewModel: MovieViewModel = ViewModelProvider(this)[MovieViewModel::class.java]
                     App(navController, modifier = Modifier.padding(innerPadding), movieManager, db,viewModel)
                 }
             }
@@ -82,18 +83,15 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
             startDestination = Destination.Movie.route
         ){
             composable(Destination.Movie.route){
-                MovieScreen(
-                    navController = navController, movieManager = movieManager, modifier = modifier,
-                    db = db
-                )
+                MovieScreen(navController = navController, movieManager= movieManager, modifier = modifier, db = db)
             }
             composable(Destination.Search.route){
                 SearchScreen(
                     modifier = Modifier.padding(paddingValues),
                     viewModel = viewModel,
                     database = db,
-                    navController = navController,
-                    movieManager = movieManager
+                    movieManager = movieManager,
+                    navController = navController
                 )
             }
             composable(Destination.Watch.route){
@@ -111,10 +109,10 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
                     }
                 }
                 movie?.let{
-                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager,viewModel)
+                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager, viewModel=viewModel)
 
                 }
-
+                //MovieDetailScreen(modifier=modifier, movie_id)
 
             }
         }

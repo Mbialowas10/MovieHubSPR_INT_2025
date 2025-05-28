@@ -3,7 +3,6 @@ package com.mbialowas.moviehubspr_int_2025.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +20,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,24 +37,38 @@ import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.mvvm.MovieViewModel
 
 
+/**
+ * Purpose - Search Screen - to lookup movies from TMDB API
+ * @params modifier: Modifier - modifier for the composable
+ * @Params viewModel: MovieViewModel - view model for the composable
+ * @Params database: AppDatabase - database for the composable
+ * @Raises: N/A
+ * @return Unit
+ */
 @Composable
 fun SearchScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     viewModel: MovieViewModel,
     database: AppDatabase,
     navController: NavController,
     movieManager: MovieManager
-)
-{
+){
+
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    var query by rememberSaveable {viewModel.searchTerm  }
+    var query by rememberSaveable { viewModel.searchTerm }
+
+
+
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.LightGray)
+        modifier = Modifier
+            .background(color = Color.LightGray)
     ){
-        Column{
+        Column(
+            modifier = modifier
+                .fillMaxSize() ,
+            horizontalAlignment = Alignment.Start
+        ) {
             Text(
                 modifier = Modifier
                     .background(color = Color.Black)
@@ -105,20 +117,19 @@ fun SearchScreen(
                     }
                 }
             } // END Box
-        }
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(10.dp)
+            )
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(10.dp)
-        )
+            LazyColumn{
+                items(viewModel.movies.value){ movie ->
+                    MovieCard(movie, navController, db = database, movieManager)
+                }
 
-        LazyColumn{
-            items(viewModel.movies.value){ movie ->
-                MovieCard(movie, navController, db = database, movieManager)
             }
 
         }
-
     }
-    }
+}

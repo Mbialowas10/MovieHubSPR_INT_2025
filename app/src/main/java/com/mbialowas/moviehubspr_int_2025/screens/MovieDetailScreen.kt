@@ -22,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,7 @@ import com.mbialowas.moviehubspr_int_2025.api.MovieManager
 import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.destinations.Destination
+import com.mbialowas.moviehubspr_int_2025.mvvm.MovieViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +55,8 @@ fun MovieDetailScreen(
     modifier: Modifier, movie: Movie,
     db: AppDatabase,
     navController: NavController,
-    movieManager: MovieManager
+    movieManager: MovieManager,
+    viewModel: MovieViewModel
 ){
     Box(
         modifier
@@ -65,7 +68,8 @@ fun MovieDetailScreen(
         Log.i("MovieDetailScreen","${movie.posterPath}")
 
         // state level variable to track movie favourite state
-        var isIconChanged by remember { mutableStateOf(false) }
+        val iconState by viewModel.movieIconState.collectAsState()
+        var isIconChanged = iconState[movie.id] == true
         var showEditDialog by remember { mutableStateOf(false) }
         var showDeleteDialog by  remember { mutableStateOf(false) }
 
@@ -98,7 +102,11 @@ fun MovieDetailScreen(
                     contentScale = ContentScale.FillBounds
                 )
                 IconButton(
-                    onClick = { isIconChanged = !isIconChanged},
+                    onClick = {
+                        isIconChanged = !isIconChanged
+                        // update movie state inside the view model
+                        viewModel.updateMovieIconState(movie.id!!,db)
+                              },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .padding(8.dp)

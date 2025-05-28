@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.modifier.modifierLocalOf
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,6 +33,7 @@ import com.mbialowas.moviehubspr_int_2025.api.MovieManager
 import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.destinations.Destination
+import com.mbialowas.moviehubspr_int_2025.mvvm.MovieViewModel
 import com.mbialowas.moviehubspr_int_2025.screens.MovieDetailScreen
 import com.mbialowas.moviehubspr_int_2025.screens.MovieScreen
 import com.mbialowas.moviehubspr_int_2025.screens.SearchScreen
@@ -50,8 +52,10 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     // get db instance
                     val db = AppDatabase.getInstance(applicationContext)
+                    // initialize view model
+                    val viewModel = ViewModelProvider(this)[MovieViewModel::class.java]
                     val movieManager = MovieManager(db) // start the process to fetching api data
-                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db)
+                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db,viewModel)
                 }
             }
         }
@@ -60,7 +64,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase){
+fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase,viewModel: MovieViewModel){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -98,7 +102,7 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
                     }
                 }
                 movie?.let{
-                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager)
+                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager,viewModel)
 
                 }
                 //MovieDetailScreen(modifier=modifier, movie_id)

@@ -41,6 +41,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mbialowas.moviehubspr_int_2025.api.MovieManager
 import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
@@ -48,7 +51,9 @@ import com.mbialowas.moviehubspr_int_2025.destinations.Destination
 import com.mbialowas.moviehubspr_int_2025.mvvm.MovieViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import okhttp3.Dispatcher
 
 @Composable
@@ -57,7 +62,8 @@ fun MovieDetailScreen(
     db: AppDatabase,
     navController: NavController,
     movieManager: MovieManager,
-    viewModel: MovieViewModel
+    viewModel: MovieViewModel,
+    fs_db: FirebaseFirestore
 ){
     Box(
         modifier
@@ -73,6 +79,7 @@ fun MovieDetailScreen(
         var isIconChanged = iconState[movie.id] ?: false // get the latest state/date for given movie
         var showEditDialog by remember { mutableStateOf(false) }
         var showDeleteDialog by  remember { mutableStateOf(false) }
+        var lastInsertedDocument: DocumentReference? by remember { mutableStateOf<DocumentReference?>(null) }
 
         Column{
             Text(
@@ -106,6 +113,54 @@ fun MovieDetailScreen(
                     onClick = {
                         isIconChanged = !isIconChanged
                         viewModel.updateMovieIconState(movie.id!!,db)
+                        // fb interaction
+                        var movieExists: Boolean? = null
+
+                        // firebase db
+                        val collection: CollectionReference = fs_db.collection("movies")
+                        val m = hashMapOf(
+                            "movie_id" to "${movie.id}",
+                            "movie_title" to "${movie.title}",
+                            "movie_overview" to "${movie.overview}",
+                            "movie_poster_path" to "${movie.posterPath}",
+                            "movie_release_date" to "${movie.releaseDate}",
+                            "movie_popularity" to "${movie.popularity}",
+                            "movie_vote_average" to "${movie.voteAverage}",
+                            "movie_vote_count" to "${movie.voteCount}",
+                            "movie_is_favourite" to "${movie.isFavorite}"
+                        )
+                        GlobalScope.launch {
+                            movieExists = doesMovieExist(movie.id.toString(), collection)
+
+                            // add a new movie to movies collection
+                            if (isIconChanged && movieExists == false) {
+                                fs_db.collection("movies").add(m)
+                                    .addOnSuccessListener { documentReference ->
+                                        lastInsertedDocument = documentReference
+                                        Log.d(
+                                            "FS",
+                                            "DocumentSnapShot add with ID: ${documentReference.id}"
+                                        )
+                                    } // end addOnSuccessListener
+                                    .addOnFailureListener { e ->
+                                        Log.w("FS", "Error adding document", e)
+                                    }// end addOnFailureListener
+                            } else if( isIconChanged == false && movieExists == true) {
+                                lastInsertedDocument?.delete()
+                                    ?.addOnSuccessListener {
+                                        Log.i("Removal", "${movie.title} removed from Firestore Db.")
+                                    }?.addOnFailureListener {
+                                        Log.i(
+                                            "Removal",
+                                            "THERE. WAS A PROBLEM REMOVING ${movie.title} FROM FireStore. Please call Mark Zuckerberg!"
+                                        )
+                                    }
+                            }
+
+
+
+                    }
+
                               },
                     modifier = Modifier
                         .align(Alignment.TopEnd)
@@ -243,4 +298,12 @@ fun MovieDetailScreen(
             }
         }
     }
+}
+
+suspend fun doesMovieExist(
+    movieID: String,
+    collection: CollectionReference
+): Boolean? {
+    val querySnapshot = collection.whereEqualTo("movie_id", movieID).get().await()
+    return !querySnapshot.isEmpty
 }

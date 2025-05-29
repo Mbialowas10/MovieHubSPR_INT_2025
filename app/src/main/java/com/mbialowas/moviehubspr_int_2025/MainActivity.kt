@@ -29,6 +29,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.mbialowas.moviehubspr_int_2025.Navigation.BottomNav
 import com.mbialowas.moviehubspr_int_2025.api.MovieManager
 import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
@@ -56,7 +59,9 @@ class MainActivity : ComponentActivity() {
                     val movieManager = MovieManager(db) // start the process to fetching api data
                     // initialize viewModel
                     val viewModel: MovieViewModel = ViewModelProvider(this)[MovieViewModel::class.java]
-                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db,viewModel)
+                    // initialize the firestore db
+                    val fs_db = Firebase.firestore
+                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db,viewModel,fs_db)
                 }
             }
         }
@@ -65,7 +70,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase,viewModel: MovieViewModel){
+fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase,viewModel: MovieViewModel,fs_db: FirebaseFirestore){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -109,7 +114,7 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
                     }
                 }
                 movie?.let{
-                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager, viewModel=viewModel)
+                    MovieDetailScreen(modifier = Modifier.padding(paddingValues), movie=movie!!,db,navController,movieManager, viewModel=viewModel, fs_db)
 
                 }
                 //MovieDetailScreen(modifier=modifier, movie_id)

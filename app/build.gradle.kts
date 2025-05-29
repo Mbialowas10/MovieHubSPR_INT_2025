@@ -77,9 +77,11 @@ dependencies {
     //google places
     implementation(libs.places)
 
-    // required matierla components library required for Google Marker?
+    // required material components library required for Google Marker?
     implementation("com.google.android.material:material:1.12.0") // Use latest stable version
 
+    // jsoup for web-scraping
+    implementation("org.jsoup:jsoup:1.17.2")
 
 
 

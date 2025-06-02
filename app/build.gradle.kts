@@ -30,6 +30,12 @@ android {
         val tmdbApiKey = localProperties.getProperty("TMDB_API_KEY") ?: ""
         buildConfigField("String", "TMDB_API_KEY", "\"$tmdbApiKey\"")
 
+        val googleApiKey = localProperties.getProperty("GOOGLE_API_KEY") ?: ""
+        buildConfigField("String", "GOOGLE_API_KEY", "\"$googleApiKey\"")
+
+        // this is additional line required for google maps
+        manifestPlaceholders["googleMapsApiKey"] = googleApiKey
+
 
         applicationId = "com.mbialowas.moviehubspr_int_2025"
         minSdk = 24
@@ -62,6 +68,23 @@ android {
 }
 
 dependencies {
+
+    // Google Maps & Location
+    implementation(libs.maps.compose)
+    implementation(libs.google.maps.sdk) // Google Maps SDK
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    //google places
+    implementation(libs.places)
+
+    // required matierla components library required for Google Marker?
+    implementation("com.google.android.material:material:1.12.0") // Use latest stable version
+
+
+
+
+    // accompanist permissions
+    implementation(libs.accompanist)
 
     // room
     implementation(libs.androidx.room.runtime)

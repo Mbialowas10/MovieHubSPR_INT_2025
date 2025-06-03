@@ -102,7 +102,12 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
                 )
             }
             composable(Destination.Watch.route){
-                WatchScreen()
+                WatchScreen(
+                    modifier = modifier,
+                    navController = navController,
+                    db = db,
+                    movieManager = movieManager
+                )
             }
             composable(Destination.MovieDetail.route) {navBackStackEntry->
                 var movie by remember{
@@ -121,7 +126,7 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
                 }
 
             }
-            composable(Destination.MapScreen.route){
+            composable(MapScreen.route){
                 MapScreen(modifier = Modifier.padding(paddingValues))
             }
         }

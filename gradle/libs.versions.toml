@@ -63,6 +63,7 @@ accompanist = { module="com.google.accompanist:accompanist-permissions", version
 #google places
 places = { module = "com.google.android.libraries.places:places", version.ref = "places" }
 
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

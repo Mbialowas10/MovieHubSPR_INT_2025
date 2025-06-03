@@ -38,6 +38,7 @@ import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.destinations.Destination
 import com.mbialowas.moviehubspr_int_2025.mvvm.MovieViewModel
+import com.mbialowas.moviehubspr_int_2025.screens.MapScreen
 import com.mbialowas.moviehubspr_int_2025.screens.MovieDetailScreen
 import com.mbialowas.moviehubspr_int_2025.screens.MovieScreen
 import com.mbialowas.moviehubspr_int_2025.screens.SearchScreen
@@ -120,7 +121,7 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
 
             }
             composable(Destination.MapScreen.route) {
-                Destination.MapScreen(modifier = Modifier.padding(paddingValues))
+                MapScreen(modifier = Modifier.padding(paddingValues))
             }
         }
     }

@@ -36,6 +36,9 @@ android {
         // 👇 THIS LINE IS MISSING
         manifestPlaceholders["googleMapsApiKey"] = googleApiKey
 
+        val serpApiKey = localProperties.getProperty("SERP_API_KEY") ?: ""
+        buildConfigField("String", "SERP_API_KEY", "\"$serpApiKey\"")
+
 
         applicationId = "com.mbialowas.moviehubspr_int_2025"
         minSdk = 24
@@ -68,7 +71,8 @@ android {
 }
 
 dependencies {
-
+    // hilt
+    implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
     // Google Maps & Location
     implementation(libs.maps.compose)
     implementation(libs.google.maps.sdk) // Google Maps SDK

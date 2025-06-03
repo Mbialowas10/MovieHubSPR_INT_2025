@@ -38,11 +38,15 @@ import com.mbialowas.moviehubspr_int_2025.api.db.AppDatabase
 import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.destinations.Destination
 import com.mbialowas.moviehubspr_int_2025.destinations.Destination.MapScreen
+import com.mbialowas.moviehubspr_int_2025.destinations.Destination.ShowtimeScreen
 import com.mbialowas.moviehubspr_int_2025.mvvm.MovieViewModel
+import com.mbialowas.moviehubspr_int_2025.mvvm.ShowtimesViewModel
 import com.mbialowas.moviehubspr_int_2025.screens.MapScreen
 import com.mbialowas.moviehubspr_int_2025.screens.MovieDetailScreen
 import com.mbialowas.moviehubspr_int_2025.screens.MovieScreen
 import com.mbialowas.moviehubspr_int_2025.screens.SearchScreen
+import com.mbialowas.moviehubspr_int_2025.screens.ShowtimeScreen
+
 import com.mbialowas.moviehubspr_int_2025.screens.WatchScreen
 import com.mbialowas.moviehubspr_int_2025.ui.theme.MovieHubSPR_INT_2025Theme
 import kotlinx.coroutines.GlobalScope
@@ -61,9 +65,10 @@ class MainActivity : ComponentActivity() {
                     val movieManager = MovieManager(db) // start the process to fetching api data
                     // initialize viewModel
                     val viewModel: MovieViewModel = ViewModelProvider(this)[MovieViewModel::class.java]
+                    val showtimeVM: ShowtimesViewModel = ViewModelProvider(this)[ShowtimesViewModel::class.java]
                     // initialize the firestore db
                     val fs_db = Firebase.firestore
-                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db,viewModel,fs_db)
+                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db,viewModel,fs_db,showtimeVM)
                 }
             }
         }
@@ -72,7 +77,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase,viewModel: MovieViewModel,fs_db: FirebaseFirestore){
+fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase,viewModel: MovieViewModel,fs_db: FirebaseFirestore,showtimeVM: ShowtimesViewModel){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -128,6 +133,9 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
             }
             composable(MapScreen.route){
                 MapScreen(modifier = Modifier.padding(paddingValues))
+            }
+            composable(ShowtimeScreen.route){
+                ShowtimeScreen(modifier = Modifier.padding(paddingValues), showtimeVM )
             }
         }
     }

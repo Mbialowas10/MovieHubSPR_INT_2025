@@ -7,6 +7,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtoolsKsp)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.dagger.hilt)
+
+
 
 }
 
@@ -73,6 +76,13 @@ android {
 dependencies {
     // hilt
     implementation("androidx.hilt:hilt-navigation-fragment:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    implementation("com.google.dagger:hilt-android:2.47")
+    ksp("com.google.dagger:hilt-compiler:2.47")
+    // Optional: For Hilt with Jetpack Compose
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+
     // Google Maps & Location
     implementation(libs.maps.compose)
     implementation(libs.google.maps.sdk) // Google Maps SDK

@@ -1,5 +1,6 @@
 package com.mbialowas.moviehubspr_int_2025.mvvm
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -33,16 +34,29 @@ class ShowtimesViewModel @Inject constructor(
             error = null
             try {
                 val response = serpApiService.getShowtimes(query, location, apiKey = api_key)
-                showtimes = response.showtimes?.map {
-                    SerpMovieShowtime(
-                        movieName = it.movie.title.toString(),
-                        theaterName = it.theater.name,
-                        address = it.theater.address.toString(),
-                        times = it.times
-                    )
+                Log.i("MJB", "Raw response: ${response.toString()}")
+                Log.i("MJB", "Showtimes field: ${response.showtimes}")
+                showtimes = response.showtimes?.mapNotNull {
+                    val movieName = it.movie?.title
+                    val theaterName = it.theater?.name
+                    val address = it.theater?.address
+                    val times = it.times
+
+                    if (movieName != null && theaterName != null && address != null && times != null) {
+                        SerpMovieShowtime(
+                            movieName = movieName,
+                            theaterName = theaterName,
+                            address = address,
+                            times = times
+                        )
+                    } else {
+                        null // filter out incomplete records
+                    }
                 } ?: emptyList()
             } catch (e: Exception) {
+                Log.e("ShowtimesViewModel", "API call failed", e)
                 error = e.message
+                showtimes = emptyList()
             } finally {
                 isLoading = false
             }

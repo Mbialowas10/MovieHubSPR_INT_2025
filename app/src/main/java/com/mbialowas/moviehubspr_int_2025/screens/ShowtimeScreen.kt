@@ -1,5 +1,6 @@
 package com.mbialowas.moviehubspr_int_2025.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,12 +23,15 @@ fun ShowtimeScreen(
     val error = viewModel.error
     val api_key= BuildConfig.SERP_API_KEY
 
+    Log.d("SERP_API_KEY", api_key)
+
     LaunchedEffect(Unit) {
         viewModel.fetchShowtimes(
-            query = "movie showtimes",
+            query = "Sinners movie showtimes",
             location = "Winnipeg",
             api_key = api_key
         )
+        Log.i("vm", showtimes.toString())
     }
 
     when {
@@ -43,6 +47,7 @@ fun ShowtimeScreen(
         }
         else -> {
             //MovieShowtimeList(showtimes)
+            Log.i("ST", showtimes.toString())
         }
     }
 }

@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface SerpApiService {
 
-    @GET("search")
+    @GET("search.json/")
     suspend fun getShowtimes(
         @Query("q") query: String,
         @Query("location") location: String,

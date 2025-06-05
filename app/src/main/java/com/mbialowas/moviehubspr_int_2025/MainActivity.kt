@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
                     val showtimeVM: ShowtimesViewModel = hiltViewModel()
                     // initialize the firestore db
                     val fs_db = Firebase.firestore
-                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db,viewModel,fs_db, showtimesViewModel = showtimeVM)
+                    App(navController, modifier = Modifier.padding(innerPadding), movieManager, db,viewModel,fs_db, showtimeViewModel = showtimeVM)
                 }
             }
         }
@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase,viewModel: MovieViewModel,fs_db: FirebaseFirestore,showtimesViewModel: ShowtimesViewModel){
+fun App(navController: NavHostController, modifier: Modifier, movieManager: MovieManager, db: AppDatabase,viewModel: MovieViewModel,fs_db: FirebaseFirestore,showtimeViewModel: ShowtimesViewModel){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -142,7 +142,7 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
             composable(ShowtimeScreen.route){
                 ShowtimeScreen(
                     modifier = Modifier.padding(paddingValues),
-                    viewModel = showtimesViewModel
+                    viewModel = showtimeViewModel
                 )
             }
         }

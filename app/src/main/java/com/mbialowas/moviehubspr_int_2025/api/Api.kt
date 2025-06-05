@@ -9,16 +9,21 @@ object Api{
 
     private val BASE_URL = "https://api.themoviedb.org/3/"
 
+
+    //tmdb
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
 
+    //tmdb
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl(BASE_URL)
         .build()
 
+    //tmdb
     val retrofitService: MovieService by lazy{
         retrofit.create(MovieService::class.java)
     }
+
 }

@@ -10,7 +10,7 @@
 
 
     <application
-        android:name="com.mbialowas.moviehubspr_int_2025.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

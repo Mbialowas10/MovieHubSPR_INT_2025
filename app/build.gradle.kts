@@ -9,6 +9,8 @@ plugins {
     alias(libs.plugins.devtoolsKsp)
     id("com.google.dagger.hilt.android")
 
+
+
 }
 
 android {
@@ -40,6 +42,14 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+    applicationVariants.all {
+        val variantName = name
+        sourceSets {
+            getByName(variantName) {
+                java.srcDir("build/generated/ksp/$variantName/kotlin")
+            }
+        }
     }
 
     buildTypes {
@@ -85,7 +95,7 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     // hilt
     implementation("com.google.dagger:hilt-android:2.56.2")
-    annotationProcessor("com.google.dagger:hilt-compiler:2.56.2")
+    ksp("com.google.dagger:hilt-compiler:2.56.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
 

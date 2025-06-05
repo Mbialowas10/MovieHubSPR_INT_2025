@@ -50,12 +50,14 @@ import com.mbialowas.moviehubspr_int_2025.api.model.Movie
 import com.mbialowas.moviehubspr_int_2025.destinations.Destination
 import com.mbialowas.moviehubspr_int_2025.mvvm.MovieViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import okhttp3.Dispatcher
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun MovieDetailScreen(
     modifier: Modifier, movie: Movie,

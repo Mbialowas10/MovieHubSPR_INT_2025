@@ -36,23 +36,20 @@ class ShowtimesViewModel @Inject constructor(
                 val response = serpApiService.getShowtimes(query, location, apiKey = api_key)
                 Log.i("MJB", "Raw response: ${response.toString()}")
                 Log.i("MJB", "Showtimes field: ${response.showtimes}")
-                showtimes = response.showtimes?.mapNotNull {
-                    val movieName = it.movie?.title
-                    val theaterName = it.theater?.name
-                    val address = it.theater?.address
-                    val times = it.times
-
-                    if (movieName != null && theaterName != null && address != null && times != null) {
-                        SerpMovieShowtime(
-                            movieName = movieName,
-                            theaterName = theaterName,
-                            address = address,
-                            times = times
-                        )
-                    } else {
-                        null // filter out incomplete records
-                    }
+                showtimes = response.showtimes?.flatMap { dayEntry ->
+                    dayEntry.theaters?.mapNotNull { theater ->
+                        val times = theater.showing?.flatMap { it.time ?: emptyList() } ?: emptyList()
+                        if (theater.name != null && theater.address != null && times.isNotEmpty()) {
+                            SerpMovieShowtime(
+                                movieName = "Sinners", // hardcoded for now
+                                theaterName = theater.name,
+                                address = theater.address,
+                                times = times
+                            )
+                        } else null
+                    } ?: emptyList()
                 } ?: emptyList()
+
             } catch (e: Exception) {
                 Log.e("ShowtimesViewModel", "API call failed", e)
                 error = e.message

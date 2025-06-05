@@ -12,6 +12,7 @@ interface SerpApiService {
         @Query("q") query: String,
         @Query("location") location: String,
         @Query("hl") language: String = "en",
-        @Query("api_key") apiKey: String
+        @Query("api_key") apiKey: String,
+        @Query("engine") engine: String = "google"
     ): SerpApiResponse
 }

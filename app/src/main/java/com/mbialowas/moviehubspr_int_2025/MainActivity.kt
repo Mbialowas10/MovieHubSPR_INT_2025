@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+
 import androidx.lifecycle.ViewModelProvider
 
 import androidx.navigation.NavHostController
@@ -51,6 +52,7 @@ import com.mbialowas.moviehubspr_int_2025.screens.ShowtimeScreen
 import com.mbialowas.moviehubspr_int_2025.screens.WatchScreen
 import com.mbialowas.moviehubspr_int_2025.ui.theme.MovieHubSPR_INT_2025Theme
 import dagger.hilt.android.AndroidEntryPoint
+
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

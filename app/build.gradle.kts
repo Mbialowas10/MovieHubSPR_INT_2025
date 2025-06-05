@@ -4,26 +4,18 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.devtoolsKsp)
     alias(libs.plugins.google.gms.google.services)
-    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.devtoolsKsp)
+    id("com.google.dagger.hilt.android")
+
 }
-
-
 
 android {
     namespace = "com.mbialowas.moviehubspr_int_2025"
     compileSdk = 35
 
-    configurations.all {
-        resolutionStrategy.eachDependency {
-            if (requested.group == "com.squareup" && requested.name == "javapoet") {
-                useVersion("1.13.0")
-                because("Fix NoSuchMethodError for canonicalName() in Hilt plugin")
-            }
-        }
-    }
+
 
     defaultConfig {
         val localProperties = Properties()
@@ -65,6 +57,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    composeOptions {
+        // Optional: Update this version to match your Compose BOM or Kotlin version if needed
+        kotlinCompilerExtensionVersion = "1.5.12"
+    }
+
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -77,18 +74,21 @@ android {
 
 dependencies {
 
+    implementation("androidx.navigation:navigation-compose:2.7.3") // Adjust version if needed
 
-    implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:2.1.0")
+    implementation("androidx.compose.ui:ui:1.6.0")
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.runtime:runtime:1.6.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.9.0")
 
     implementation("com.google.android.material:material:1.12.0")
-
-    // ✅ Hilt setup (matching versions)
-    implementation("com.google.dagger:hilt-android:2.51")
-    ksp("com.google.dagger:hilt-compiler:2.51")
+    // hilt
+    implementation("com.google.dagger:hilt-android:2.56.2")
+    annotationProcessor("com.google.dagger:hilt-compiler:2.56.2")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    // JavaPoet compatibility fix for Hilt
-    implementation("com.squareup:javapoet:1.13.0")
+
 
     // Google Maps & Location
     implementation(libs.maps.compose)

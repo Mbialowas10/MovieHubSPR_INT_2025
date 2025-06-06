@@ -139,10 +139,14 @@ fun App(navController: NavHostController, modifier: Modifier, movieManager: Movi
             composable(MapScreen.route){
                 MapScreen(modifier = Modifier.padding(paddingValues))
             }
-            composable(ShowtimeScreen.route){
+            composable("${ShowtimeScreen.route}/{movieTitle}"){backStackEntry->
+                var movieTitle = backStackEntry.arguments?.getString("movieTitle").toString()
+                Log.i("MJB", "${movieTitle}")
                 ShowtimeScreen(
                     modifier = Modifier.padding(paddingValues),
-                    viewModel = showtimeViewModel
+                    viewModel = showtimeViewModel,
+                    movieTitle = movieTitle
+
                 )
             }
         }

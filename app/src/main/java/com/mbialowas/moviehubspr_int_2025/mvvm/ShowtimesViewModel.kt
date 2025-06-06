@@ -28,12 +28,13 @@ class ShowtimesViewModel @Inject constructor(
     var error by mutableStateOf<String?>(null)
 
     fun fetchShowtimes(query: String, location: String, api_key: String) {
-
+        var query_revised = "$query movie showtimes".toString()
+        Log.i("MJb", query_revised)
         viewModelScope.launch {
             isLoading = true
             error = null
             try {
-                val response = serpApiService.getShowtimes(query, location, apiKey = api_key)
+                val response = serpApiService.getShowtimes(query_revised, location, apiKey = api_key)
                 Log.i("MJB", "Raw response: ${response.toString()}")
                 Log.i("MJB", "Showtimes field: ${response.showtimes}")
                 showtimes = response.showtimes?.flatMap { dayEntry ->
@@ -41,7 +42,7 @@ class ShowtimesViewModel @Inject constructor(
                         val times = theater.showing?.flatMap { it.time ?: emptyList() } ?: emptyList()
                         if (theater.name != null && theater.address != null && times.isNotEmpty()) {
                             SerpMovieShowtime(
-                                movieName = "Sinners", // hardcoded for now
+                                movieName = query, // hardcoded for now
                                 theaterName = theater.name,
                                 address = theater.address,
                                 times = times

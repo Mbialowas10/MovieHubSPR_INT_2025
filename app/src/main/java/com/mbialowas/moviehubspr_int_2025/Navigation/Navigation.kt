@@ -63,14 +63,14 @@ fun BottomNav(navController: NavController){
             icon = { Icon(painter = ic_map, contentDescription = null)},
             label = { Text(text = Destination.MapScreen.route) }
         ) // end mapscreen
-        NavigationBarItem(
-            selected = currentDestination?.route == Destination.ShowtimeScreen.route,
-            onClick = { navController.navigate(Destination.ShowtimeScreen.route) {
-                popUpTo(Destination.ShowtimeScreen.route)
-                launchSingleTop = true
-            }},
-            icon = { Icon(painter = ic_map, contentDescription = null)},
-            label = { Text(text = Destination.ShowtimeScreen.route) }
-        ) // end showtime
+//        NavigationBarItem(
+//            selected = currentDestination?.route == Destination.ShowtimeScreen.route,
+//            onClick = { navController.navigate(Destination.ShowtimeScreen.route) {
+//                popUpTo(Destination.ShowtimeScreen.route)
+//                launchSingleTop = true
+//            }},
+//            icon = { Icon(painter = ic_map, contentDescription = null)},
+//            label = { Text(text = Destination.ShowtimeScreen.route) }
+//        ) // end showtime
     }
 }

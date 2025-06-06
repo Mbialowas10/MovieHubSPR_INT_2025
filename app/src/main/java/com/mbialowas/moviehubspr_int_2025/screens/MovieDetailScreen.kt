@@ -196,6 +196,13 @@ fun MovieDetailScreen(
                     ) {
                         Text("Delete")
                     }
+                    Button(
+                        onClick = {
+                            navController.navigate("showtimeScreen/${movie.title}")
+                        }
+                    ){
+                        Text("View ShowTimes...")
+                    }
                     // show Dialogs
                     if (showDeleteDialog){
                         DeleteMovieDialog(

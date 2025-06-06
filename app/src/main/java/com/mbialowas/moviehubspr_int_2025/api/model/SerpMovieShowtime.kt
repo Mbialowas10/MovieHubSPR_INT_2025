@@ -4,5 +4,6 @@ data class SerpMovieShowtime(
     val movieName: String,
     val theaterName: String,
     val address: String,
-    val times: List<String>
+    val times: List<String>,
+    val day: String
 )

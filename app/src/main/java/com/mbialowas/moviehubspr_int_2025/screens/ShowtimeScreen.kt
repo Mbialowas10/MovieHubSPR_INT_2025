@@ -72,6 +72,7 @@ fun MovieShowtimeList(modifier: Modifier, movieTitle: String, showtimes: List<Se
                 Card(modifier = Modifier.fillMaxSize()) {
                     Text(text = "📍 ${movie.theaterName}")
                     Text(text = "🏠 ${movie.address}")
+                    Text(text = movie.day)
                     Text(text = "⏰ Showtimes: ${movie.times.joinToString(", ")}")
                 }
                 Spacer(

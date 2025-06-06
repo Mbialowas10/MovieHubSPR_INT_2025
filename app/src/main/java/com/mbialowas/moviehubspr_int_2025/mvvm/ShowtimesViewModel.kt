@@ -45,7 +45,8 @@ class ShowtimesViewModel @Inject constructor(
                                 movieName = query, // hardcoded for now
                                 theaterName = theater.name,
                                 address = theater.address,
-                                times = times
+                                times = times,
+                                day =  dayEntry.day.toString()
                             )
                         } else null
                     } ?: emptyList()

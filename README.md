@@ -1,6 +1,6 @@
 # 📱 Mobile Development Capstone App
 
-This project is a demonstration Android application developed using modern Android development tools and best practices. It is designed as a **capstone project** for students enrolled in **Mobile Development**, under the guidance of instructor **Michael Bialowas**.
+This project is a demonstration of an Android application developed using modern Android development tools and best practices. It is designed as a **capstone project** for students enrolled in **Mobile Development**.
 
 ## 🔧 Tech Stack
 
@@ -17,7 +17,7 @@ This app serves as a **learning platform** to showcase and apply key concepts in
 
 - Declarative UI with Jetpack Compose
 - Clean architecture and separation of concerns via MVVM
-- Handling local data with Room
+- Handling local data with Room (Abstraction layer of SQLite)
 - Working with cloud-based NoSQL databases using Firestore
 - Secure user login & registration using Firebase Authentication
 
@@ -31,7 +31,7 @@ This app serves as a **learning platform** to showcase and apply key concepts in
 
 ## 🛠️ Getting Started
 
-To build and run this project locally:
+To contribute to this project fork this repo then clone a local copy of it. 
 
 1. **Clone the repository**:
    ```bash

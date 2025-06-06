@@ -1,15 +1,22 @@
 package com.mbialowas.moviehubspr_int_2025.screens
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -90,50 +97,78 @@ fun Map(viewModel: MapViewModel){
         position = CameraPosition.fromLatLngZoom(winnipeg, zoom)
     }
     Log.i("theatres", theatres.toString())
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        GoogleMap(
-            cameraPositionState = cameraPositionState,
-            modifier = Modifier.matchParentSize()
+    Column{
+        Box(
+            modifier = Modifier.fillMaxWidth()
+                .fillMaxHeight(0.7f)
         ) {
-            theatres.forEach { theater ->
-                val theaterLocation = LatLng(theater.latitude, theater.longitude)
-                Log.i("Marker", theaterLocation.toString())
-                Log.i("Marker", theater.name.toString())
-                Log.i("Marker", theater.address.toString())
-                Marker(
-                    state = MarkerState(position = theaterLocation),
-                    title = theater.name,
-                    snippet = theater.address
-                )
-
-            }
-        }
-        Column(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(16.dp)
-                .background(Color.White.copy(alpha = 0.8f)),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Button(
-                onClick = {
-                    zoom += 1f
-                    cameraPositionState.move(CameraUpdateFactory.zoomTo(zoom))
-                }
+            GoogleMap(
+                cameraPositionState = cameraPositionState,
+                modifier = Modifier.matchParentSize()
             ) {
-                Text("+")
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(
-                onClick = {
-                    zoom -= 1f
-                    cameraPositionState.move(CameraUpdateFactory.zoomTo(zoom))
-                }
-            ){
-                Text("-")
-            }
-        }
-    }
+                theatres.forEach { theater ->
+                    val theaterLocation = LatLng(theater.latitude, theater.longitude)
+                    Log.i("Marker", theaterLocation.toString())
+                    Log.i("Marker", theater.name.toString())
+                    Log.i("Marker", theater.address.toString())
+                    Marker(
+                        state = MarkerState(position = theaterLocation),
+                        title = theater.name,
+                        snippet = theater.address
+                    )
 
-}
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(16.dp)
+                    .background(Color.White.copy(alpha = 0.8f)),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Button(
+                    onClick = {
+                        zoom += 1f
+                        cameraPositionState.move(CameraUpdateFactory.zoomTo(zoom))
+                    }
+                ) {
+                    Text("+")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        zoom -= 1f
+                        cameraPositionState.move(CameraUpdateFactory.zoomTo(zoom))
+                    }
+                ){
+                    Text("-")
+                }
+            }
+
+        } // end map box
+        Card(){
+            val context = LocalContext.current
+            LazyColumn(
+                modifier = Modifier
+                    .background(Color.White.copy(alpha = 0.9f))
+                    .padding(8.dp)
+            ) {
+                items(theatres) { theater ->
+                    Column(modifier = Modifier.padding(8.dp)) {
+                        Text(text = theater.name)
+                        Text(text = theater.address.toString())
+                        Button(onClick = {
+                            val gmmIntentUri = Uri.parse("google.navigation:q=${Uri.encode(theater.latitude.toString() + "," + theater.longitude.toString())}")
+                            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
+                                setPackage("com.google.android.apps.maps")
+                            }
+                            context.startActivity(mapIntent)
+                        }) {
+                            Text("Get Directions")
+                        }
+                    }
+                }
+            }
+        } // end card
+    } // end column
+} // end map

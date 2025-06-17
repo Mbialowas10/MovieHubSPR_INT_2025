@@ -5,8 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -158,32 +160,38 @@ fun Map(viewModel: MapViewModel){
                     Column(modifier = Modifier.padding(8.dp)) {
                         Text(text = theater.name)
                         Text(text = theater.address.toString())
-                        Button(onClick = {
-                            val gmmIntentUri = Uri.parse("google.navigation:q=${Uri.encode(theater.latitude.toString() + "," + theater.longitude.toString())}")
-                            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
-                                setPackage("com.google.android.apps.maps")
-                            }
-                            context.startActivity(mapIntent)
-                        }) {
-                            Text("Get Directions")
-                        } // end get directions button
-                        Button(onClick = {
-                            showReviews = !showReviews
-                            if (showReviews && reviews.isEmpty()) {
-                                // Call ViewModel function to load reviews using theater.placeId
-                                viewModel.loadReviews(theater.placeId.toString()) { fetchedReviews ->
-                                    reviews = fetchedReviews
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Absolute.SpaceEvenly
+                        ){
+                            Button(onClick = {
+                                val gmmIntentUri = Uri.parse("google.navigation:q=${Uri.encode(theater.latitude.toString() + "," + theater.longitude.toString())}")
+                                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
+                                    setPackage("com.google.android.apps.maps")
                                 }
+                                context.startActivity(mapIntent)
+                            }) {
+                                Text("Get Directions")
+                            } // end get directions button
+                            Button(onClick = {
+                                showReviews = !showReviews
+                                if (showReviews && reviews.isEmpty()) {
+                                    // Call ViewModel function to load reviews using theater.placeId
+                                    viewModel.loadReviews(theater.placeId.toString()) { fetchedReviews ->
+                                        reviews = fetchedReviews
+                                    }
+                                }
+                            }) {
+                                Text(if (showReviews) "Hide Reviews" else "View Reviews")
                             }
-                        }) {
-                            Text(if (showReviews) "Hide Reviews" else "View Reviews")
-                        }
-
+                        } // end row
                         if (showReviews) {
                             reviews.forEach {
                                 Text(text = "- $it", modifier = Modifier.padding(start = 8.dp))
                             }
                         }
+
                     }
                 }
             }

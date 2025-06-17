@@ -1,8 +1,10 @@
 package com.mbialowas.moviehubspr_int_2025.api.model.serp
 
 
+import androidx.room.Ignore
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+
 
 @JsonClass(generateAdapter = true)
 data class AvailableOn(

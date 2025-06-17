@@ -19,6 +19,7 @@ class ShowtimesViewModel @Inject constructor(
     private val serpApiService: SerpApiService
 ) : ViewModel() {
 
+
     // api key
     //var api_key: String = BuildConfig.SERP_API_KEY
     var showtimes by mutableStateOf<List<SerpMovieShowtime>>(emptyList())

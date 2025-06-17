@@ -57,7 +57,6 @@ fun MapScreen(
     val theaters by viewModel.theaters.collectAsState()
     val location = LatLng(49.839112, -97.211510) // San Francisco coordinates
 
-    //val api_key="AIzaSyCS0ESfKAY0wJnF8FVRjfxa4oMOM1rzRPo"
     val api_key = BuildConfig.GOOGLE_API_KEY
 
 
@@ -147,6 +146,8 @@ fun Map(viewModel: MapViewModel){
 
         } // end map box
         Card(){
+            var reviews by remember { mutableStateOf<List<String>>(emptyList()) }
+            var showReviews by remember { mutableStateOf(false) }
             val context = LocalContext.current
             LazyColumn(
                 modifier = Modifier
@@ -165,6 +166,23 @@ fun Map(viewModel: MapViewModel){
                             context.startActivity(mapIntent)
                         }) {
                             Text("Get Directions")
+                        } // end get directions button
+                        Button(onClick = {
+                            showReviews = !showReviews
+                            if (showReviews && reviews.isEmpty()) {
+                                // Call ViewModel function to load reviews using theater.placeId
+                                viewModel.loadReviews(theater.placeId.toString()) { fetchedReviews ->
+                                    reviews = fetchedReviews
+                                }
+                            }
+                        }) {
+                            Text(if (showReviews) "Hide Reviews" else "View Reviews")
+                        }
+
+                        if (showReviews) {
+                            reviews.forEach {
+                                Text(text = "- $it", modifier = Modifier.padding(start = 8.dp))
+                            }
                         }
                     }
                 }
